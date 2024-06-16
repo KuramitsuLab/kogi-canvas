@@ -13,19 +13,19 @@ def _requires_from_file(filename):
     return open(filename).read().splitlines()
 
 
-setup(name="kogi",
-      version="0.6.10.24",
-      license='MIT',
+setup(name="kogi-canvas",
+      version="0.0.1",
+      license='A',
       author='Kimio Kuramitsu',
-      description="Kogi Programming Assistant AI Dog",
-      url="https://github.com/kuramitsulab/kogi",
-      packages=['kogi', 'kogi.service', 'kogi.problem', 'kogi.webui'],
+      description="Canvas from KOGI",
+      url="https://github.com/kuramitsulab/kogi-canvas",
+      packages=['kogi-canvas'],
       # package_dir={"": "src"},
-      package_data={'kogi': ['./*.pegtree', 'webui/*.*', '*/*.tsv', 'data/*.*']},
+      package_data={'kogi-canvas': ['./*.*']},
       install_requires=_requires_from_file('requirements.txt'),
       classifiers=[
           'Development Status :: 4 - Beta',
-          'License :: OSI Approved :: MIT License',
+          'License :: OSI Approved :: Apache Software License',
           'Framework :: IPython',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
