@@ -15,7 +15,7 @@ def _requires_from_file(filename):
 
 setup(name="kogi-canvas",
       version="0.0.1",
-      license='A',
+      license='Apache',
       author='Kimio Kuramitsu',
       description="Canvas from KOGI",
       url="https://github.com/kuramitsulab/kogi-canvas",
