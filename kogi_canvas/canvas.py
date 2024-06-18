@@ -273,7 +273,9 @@ class Canvas(object):
         ctx.fillStyle = self.background
         ctx.fillRect(0, 0, self.width, self.height)
         if isinstance(self.grid, int) and self.grid > 0:
+            ctx.save()
             ctx.strokeStyle = '#808080'
+            ctx.lineWidth = 1
             ctx.setLineDash([5, 5])
             for x in range(0, self.width, self.grid):
                 ctx.beginPath()
@@ -285,7 +287,7 @@ class Canvas(object):
                 ctx.moveTo(0, y)
                 ctx.lineTo(self.width, y)
                 ctx.stroke()
-            ctx.setLineDash([])
+            ctx.restore()
         return ctx
 
     def _repr_html_(self):
