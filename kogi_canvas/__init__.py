@@ -1,1 +1,1 @@
-from .pycanvas import Canvas, draw_np
+from .pycanvas import Canvas
