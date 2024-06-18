@@ -277,6 +277,7 @@ class Canvas(object):
         ctx.fillRect(0, 0, self.width, self.height)
         if isinstance(self.grid, int) and self.grid > 0:
             ctx.strokeStyle = '#808080'
+            ctx.setLineDash([5, 5])
             for x in range(0, self.width, self.grid):
                 ctx.beginPath()
                 ctx.moveTo(x, 0)
@@ -287,6 +288,7 @@ class Canvas(object):
                 ctx.moveTo(0, y)
                 ctx.lineTo(self.width, y)
                 ctx.stroke()
+            ctx.setLineDash([])
         return ctx
 
     def asm(self):
