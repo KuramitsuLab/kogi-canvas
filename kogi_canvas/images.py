@@ -104,3 +104,12 @@ def data_url(file, width=None, height=None):
     mimetype = file_to_mime(file)
     return f'data:{mimetype};base64,'+b64encode(bin).decode()
 
+import ffmpeg
+
+def create_video(uuid0, framerate, filename):
+    (
+        ffmpeg
+        .input(f'canvas{uuid0}/frame%04d.png', framerate=framerate)
+        .output(filename, vcodec='libx264', pix_fmt='yuv420p')
+        .run(overwrite_output=True)
+    )
