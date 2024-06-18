@@ -3,6 +3,7 @@ import os
 from urllib.parse import urlparse
 from PIL import Image
 from io import BytesIO
+from base64 import b64encode
 
 uuid0 = -1
 
@@ -51,7 +52,7 @@ def resize_image(image_path, new_width=None, new_height=None):
         # 画像をリサイズ
         resized_img = img.resize((new_width, new_height))
 
-        path, ext = image_path.rpartition('.')
+        path, _, ext = image_path.rpartition('.')
         output_path = f'{path}_{new_width}x{new_height}.{ext}'
         # リサイズされた画像を保存
         resized_img.save(output_path)
@@ -66,5 +67,40 @@ def load_image(url_or_imagepath, width=None, height=None):
         if url_or_imagepath not in _CACHE:
             _CACHE[url_or_imagepath] = download_image(url_or_imagepath)
         save_path = _CACHE[url_or_imagepath]
-    if
+    else:
+        save_path = url_or_imagepath
+    if width is None and height is None:
+        return save_path
+    key = (save_path, width, height)
+    if key not in _CACHE:
+        _CACHE[key] = resize_image(save_path, width, height)
+    return _CACHE[key]
+
+mime_types = {
+    'jpg': 'image/jpeg',
+    'jpeg': 'image/jpeg',
+    'png': 'image/png',
+    'gif': 'image/gif',
+    'bmp': 'image/bmp',
+    'tiff': 'image/tiff',
+    'webp': 'image/webp',
+    'svg': 'image/svg+xml'
+}
+
+def file_to_mime(path):
+    path, _, ext = path.rpartition('.')
+
+    # 拡張子の前後の空白を削除し、小文字に変換
+    ext = ext.strip().lower()
+    
+    # MIMEタイプを取得（存在しない場合は'image/png'）
+    return mime_types.get(ext, 'image/png')
+ 
+
+def data_url(file, width=None, height=None):
+    file = load_image(file, width, height)
+    with open(file, 'rb') as f:
+        bin = f.read()
+    mimetype = file_to_mime(file)
+    return f'data:{mimetype};base64,'+b64encode(bin).decode()
 
