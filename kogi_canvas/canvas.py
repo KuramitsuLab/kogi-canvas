@@ -2,7 +2,6 @@ import builtins
 import numpy as np
 import json
 import os
-import shlex
 from base64 import b64encode
 from binascii import a2b_base64
 import traceback
@@ -64,8 +63,6 @@ def new_context(contexts=[]):
 
 # HTML
 
-_IMAGES = {}
-
 def html_img(key, data_url):
     return f'<img id="{key}" src="{data_url}">'
 
@@ -74,7 +71,7 @@ ANIME = '''
 <div style="display:none;">
 IMG
 </div>
-<canvas id="canvas" width="400" height="300" style="background-color:rgb(0,0,0)">
+<canvas id="canvas" width="400" height="300" style="background-color:rgb(127,127,127)">
 </canvas>
 '''
 
@@ -99,6 +96,7 @@ def make_html(canvas, base=ANIME):
     base = base.replace('400', f'{canvas.width}')
     base = base.replace('300', f'{canvas.height}')
     base = base.replace('IMG', images)
+    print(base)
     return base
 
 
@@ -214,7 +212,7 @@ save()
 
 def make_js(canvas, asm, fps=0, onclick=None):
     js = DRAW_JS.replace('[[]]', json.dumps(asm))
-    newid = f'"canvas{id(canvas)}"'
+    newid = f'"canvas{canvas.uuid0}"'
     js = js.replace('"canvas"', newid)
     if fps > 0:
         js += ANIME_JS.replace('100', f'{1000//fps}')
