@@ -79,9 +79,10 @@ MOVIE = '''
 <div style="display:none;">
 IMG
 </div>
-<progress id="prog_bar" value="0" max="100"></progress>
 <canvas id="canvas" width="400" height="300" style="background-color:rgb(0,0,0)">
 </canvas>
+<br>
+<progress id="prog_bar" value="0" max="100"></progress>
 '''
 
 
@@ -96,7 +97,6 @@ def make_html(canvas, base=ANIME):
     base = base.replace('400', f'{canvas.width}')
     base = base.replace('300', f'{canvas.height}')
     base = base.replace('IMG', images)
-    print(base)
     return base
 
 
@@ -238,7 +238,7 @@ def safe(f):
 _canvas_uuid0 = -1
 
 class Canvas(object):
-    def __init__(self, width=400, height=300, background='white', fps=5, grid=100, onclick=None):
+    def __init__(self, width=400, height=300, background='rgb(243,245,250)', fps=5, grid=100, onclick=None):
         global _canvas_uuid0
         _canvas_uuid0 += 1
         self.uuid0 = _canvas_uuid0
@@ -309,13 +309,6 @@ class Canvas(object):
             self.filename = filename
         if fps is not None:
             self.fps = int(fps)
-        # i = 0
-        # while True:
-        #     fname = f'frame{i:04d}.png'
-        #     if not os.path.exists(fname):
-        #         break
-        #     os.remove(fname)
-        #     i += 1
         first_frame = [[c.to_json() for c in self.buffers[0]]]
         display(HTML(make_html(self, MOVIE) + make_js(self, first_frame)))
 
