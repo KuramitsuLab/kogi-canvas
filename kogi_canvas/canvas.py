@@ -9,7 +9,8 @@ import IPython
 from IPython.display import HTML, JSON, display
 
 from .google_check import google_output
-from .images import data_url, create_video
+from .images import data_url
+from .movies import install_ffmpeg, create_video
 
 class MP4(object):
     def __init__(self, filename, width=400):
@@ -307,6 +308,7 @@ class Canvas(object):
         })
 
     def save_movie(self, filename=None, fps=None):
+        install_ffmpeg()
         if filename is not None:
             self.filename = filename
         if fps is not None:
