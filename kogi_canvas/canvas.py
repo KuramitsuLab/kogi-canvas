@@ -239,7 +239,7 @@ def safe(f):
 _canvas_uuid0 = -1
 
 class Canvas(object):
-    def __init__(self, width=400, height=300, background='rgb(243,245,250)', fps=5, grid=100, onclick=None):
+    def __init__(self, width=400, height=300, background='rgb(243,245,250)', fps=5, grid=0, onclick=None):
         global _canvas_uuid0
         _canvas_uuid0 += 1
         self.uuid0 = _canvas_uuid0
