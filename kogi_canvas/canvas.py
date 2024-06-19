@@ -72,7 +72,7 @@ ANIME = '''
 <div style="display:none;">
 IMG
 </div>
-<canvas id="canvas" width="400" height="300" style="background-color:rgb(127,127,127)">
+<canvas id="canvas" width="400" height="300" style="background-color:white">
 </canvas>
 '''
 
@@ -80,7 +80,7 @@ MOVIE = '''
 <div style="display:none;">
 IMG
 </div>
-<canvas id="canvas" width="400" height="300" style="background-color:rgb(0,0,0)">
+<canvas id="canvas" width="400" height="300" style="background-color:white">
 </canvas>
 <br>
 <progress id="prog_bar" value="0" max="100"></progress>
@@ -97,6 +97,7 @@ def make_html(canvas, base=ANIME):
     base = base.replace('"canvas"', newid)
     base = base.replace('400', f'{canvas.width}')
     base = base.replace('300', f'{canvas.height}')
+    base = base.replace('white', f'{canvas.background}')
     base = base.replace('IMG', images)
     return base
 

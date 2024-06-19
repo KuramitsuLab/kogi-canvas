@@ -14,7 +14,7 @@ def _requires_from_file(filename):
 
 
 setup(name="kogi-canvas",
-      version="0.1.1",
+      version="0.1.2",
       license='Apache',
       author='Kimio Kuramitsu',
       description="Canvas from KOGI",
@@ -31,6 +31,7 @@ setup(name="kogi-canvas",
           'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.9',
           'Programming Language :: Python :: 3.10',
+          'Programming Language :: Python :: 3.11',
           'Intended Audience :: Education',
       ],
       )
