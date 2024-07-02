@@ -1,5 +1,6 @@
 import subprocess
 import ffmpeg
+import sys
 
 _installed = False
 
@@ -34,9 +35,18 @@ def install_ffmpeg(sync=False):
 
 def create_video(uuid0, framerate, filename):
     install_ffmpeg(sync=True)
-    (
+    print(f'!ffmpeg -y -framerate {framerate} -i frame%04d.png -vcodec libx264 -pix_fmt yuv420p {filename}')
+    # FFmpegコマンドを実行し、stderrをキャプチャ
+    process = (
         ffmpeg
         .input(f'canvas{uuid0}/frame%04d.png', framerate=framerate)
         .output(filename, vcodec='libx264', pix_fmt='yuv420p')
-        .run(overwrite_output=True)
+        .run_async(pipe_stdout=True, pipe_stderr=True, overwrite_output=True)
     )
+
+    # ストリームを読み取ってstderrを表示
+    stdout, stderr = process.communicate()
+
+    # 標準エラー出力を表示
+    if stderr:
+        sys.stderr.write(stderr.decode('utf-8'))
