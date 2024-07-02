@@ -35,7 +35,7 @@ def install_ffmpeg(sync=False):
 
 def create_video(uuid0, framerate, filename):
     install_ffmpeg(sync=True)
-    print(f'!ffmpeg -y -framerate {framerate} -i frame%04d.png -vcodec libx264 -pix_fmt yuv420p {filename}')
+    print(f'!ffmpeg -y -framerate {framerate} -i canvas{uuid0}/frame%04d.png -vcodec libx264 -pix_fmt yuv420p {filename}')
     # FFmpegコマンドを実行し、stderrをキャプチャ
     process = (
         ffmpeg
