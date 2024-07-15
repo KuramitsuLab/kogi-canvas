@@ -79,6 +79,7 @@ IMG
 '''
 
 MOVIE = '''
+<div>
 Browser Version: <span id="browser-info"></span>
 <script type="text/javascript">
 function getBrowserInfo() {
@@ -113,6 +114,7 @@ function getBrowserInfo() {
 }
 document.getElementById("browser-info").innerText = getBrowserInfo();
 </script>
+</div>
 <div style="display:none;">
 IMG
 </div>
