@@ -12,55 +12,6 @@ from .google_check import google_output
 from .images import data_url
 from .movies import install_ffmpeg, create_video
 
-VERSION = '''
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Browser Version</title>
-</head>
-<h1>Your Browser Version</h1>
-<p id="browser-info"></p>
-
-<script type="text/javascript">
-function getBrowserInfo() {
-    var userAgent = navigator.userAgent;
-    var browserName, fullVersion, majorVersion;
-
-    if ((offset = userAgent.indexOf("Firefox")) != -1) {
-        browserName = "Mozilla Firefox";
-        fullVersion = userAgent.substring(offset + 8);
-    } else if ((offset = userAgent.indexOf("Chrome")) != -1) {
-        browserName = "Google Chrome";
-        fullVersion = userAgent.substring(offset + 7);
-    } else if ((offset = userAgent.indexOf("Safari")) != -1) {
-        browserName = "Apple Safari";
-        fullVersion = userAgent.substring(offset + 7);
-        if ((offset = userAgent.indexOf("Version")) != -1) {
-            fullVersion = userAgent.substring(offset + 8);
-        }
-    } else if ((offset = userAgent.indexOf("MSIE")) != -1) {
-        browserName = "Microsoft Internet Explorer";
-        fullVersion = userAgent.substring(offset + 5);
-    } else if ((offset = userAgent.indexOf("Edge")) != -1) {
-        browserName = "Microsoft Edge";
-        fullVersion = userAgent.substring(offset + 5);
-    } else {
-        browserName = "Unknown";
-        fullVersion = "Unknown";
-    }
-
-    majorVersion = parseInt('' + fullVersion, 10);
-    return browserName + " " + fullVersion + " (Major version: " + majorVersion + ")";
-}
-
-document.getElementById("browser-info").innerText = getBrowserInfo();
-</script>
-'''
-
-def show_version():
-    display(HTML(VERSION))
-
-show_version()
 
 class MP4(object):
     def __init__(self, filename, width=400):
@@ -128,6 +79,40 @@ IMG
 '''
 
 MOVIE = '''
+Browser Version: <span id="browser-info"></span>
+<script type="text/javascript">
+function getBrowserInfo() {
+    var userAgent = navigator.userAgent;
+    var browserName, fullVersion, majorVersion;
+
+    if ((offset = userAgent.indexOf("Firefox")) != -1) {
+        browserName = "Mozilla Firefox";
+        fullVersion = userAgent.substring(offset + 8);
+    } else if ((offset = userAgent.indexOf("Chrome")) != -1) {
+        browserName = "Google Chrome";
+        fullVersion = userAgent.substring(offset + 7);
+    } else if ((offset = userAgent.indexOf("Safari")) != -1) {
+        browserName = "Apple Safari";
+        fullVersion = userAgent.substring(offset + 7);
+        if ((offset = userAgent.indexOf("Version")) != -1) {
+            fullVersion = userAgent.substring(offset + 8);
+        }
+    } else if ((offset = userAgent.indexOf("MSIE")) != -1) {
+        browserName = "Microsoft Internet Explorer";
+        fullVersion = userAgent.substring(offset + 5);
+    } else if ((offset = userAgent.indexOf("Edge")) != -1) {
+        browserName = "Microsoft Edge";
+        fullVersion = userAgent.substring(offset + 5);
+    } else {
+        browserName = "Unknown";
+        fullVersion = "Unknown";
+    }
+
+    majorVersion = parseInt('' + fullVersion, 10);
+    return browserName + " " + fullVersion + " (Major version: " + majorVersion + ")";
+}
+document.getElementById("browser-info").innerText = getBrowserInfo();
+</script>
 <div style="display:none;">
 IMG
 </div>
