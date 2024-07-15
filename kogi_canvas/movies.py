@@ -46,8 +46,10 @@ def create_video(uuid0, framerate, filename):
 
     # ストリームを読み取ってstderrを表示
     stdout, stderr = process.communicate()
-    print('@', stdout, stderr)
+    # print('@', stdout, stderr)
 
     # 標準エラー出力を表示
     if stderr:
-        sys.stderr.write(stderr.decode('utf-8'))
+        filename = filename.replace('.', '_')
+        with open(f'{filename}_log.txt', 'w') as f:
+            f.write(stderr.decode('utf-8'))
