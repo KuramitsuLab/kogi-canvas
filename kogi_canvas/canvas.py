@@ -12,6 +12,56 @@ from .google_check import google_output
 from .images import data_url
 from .movies import install_ffmpeg, create_video
 
+VERSION = '''
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browser Version</title>
+</head>
+<h1>Your Browser Version</h1>
+<p id="browser-info"></p>
+
+<script type="text/javascript">
+function getBrowserInfo() {
+    var userAgent = navigator.userAgent;
+    var browserName, fullVersion, majorVersion;
+
+    if ((offset = userAgent.indexOf("Firefox")) != -1) {
+        browserName = "Mozilla Firefox";
+        fullVersion = userAgent.substring(offset + 8);
+    } else if ((offset = userAgent.indexOf("Chrome")) != -1) {
+        browserName = "Google Chrome";
+        fullVersion = userAgent.substring(offset + 7);
+    } else if ((offset = userAgent.indexOf("Safari")) != -1) {
+        browserName = "Apple Safari";
+        fullVersion = userAgent.substring(offset + 7);
+        if ((offset = userAgent.indexOf("Version")) != -1) {
+            fullVersion = userAgent.substring(offset + 8);
+        }
+    } else if ((offset = userAgent.indexOf("MSIE")) != -1) {
+        browserName = "Microsoft Internet Explorer";
+        fullVersion = userAgent.substring(offset + 5);
+    } else if ((offset = userAgent.indexOf("Edge")) != -1) {
+        browserName = "Microsoft Edge";
+        fullVersion = userAgent.substring(offset + 5);
+    } else {
+        browserName = "Unknown";
+        fullVersion = "Unknown";
+    }
+
+    majorVersion = parseInt('' + fullVersion, 10);
+    return browserName + " " + fullVersion + " (Major version: " + majorVersion + ")";
+}
+
+document.getElementById("browser-info").innerText = getBrowserInfo();
+</script>
+'''
+
+def show_version():
+    display(HTML(VERSION))
+
+show_version()
+
 class MP4(object):
     def __init__(self, filename, width=400):
         self.filename = filename
@@ -62,6 +112,7 @@ def new_context(contexts=[]):
 
     return Context()
 
+
 # HTML
 
 def html_img(key, data_url):
@@ -85,7 +136,6 @@ IMG
 <br>
 <progress id="prog_bar" value="0" max="100"></progress>
 '''
-
 
 def make_html(canvas, base=ANIME):
     images = ''
@@ -127,7 +177,9 @@ const draw = (data) => {
         else{
             if(op[1] === 'drawImage' && typeof op[2][0] === 'string') {
                 console.log(op[2][0]);
-                op[2][0] = document.getElementById(op[2][0]);
+                img = document.getElementById(op[2][0]);
+                img.crossOrigin = 'anonymous'; // クロスオリジンリクエストを許可
+                op[2][0] = img;
             }
             ctx[op[1]](...op[2]);
         }
@@ -212,6 +264,62 @@ const save = () => {
 save()
 '''
 
+MOVIE2_JS = '''
+const canvas = document.getElementById('canvas');
+const stopButton = document.getElementById('button');
+const recordedVideo = document.getElementById('recordedVideo');
+
+let mediaRecorder;
+let recordedChunks = [];
+
+// Canvasに何か描画する（例として矩形を移動させる）
+let x = 0;
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(x, 50, 100, 100);
+    x += 2;
+    if (x > canvas.width) x = -100;
+    requestAnimationFrame(draw);
+}
+draw();
+
+// 録画開始
+const stream = canvas.captureStream(30); // 30 fpsでキャプチャ
+mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+
+mediaRecorder.ondataavailable = (event) => {
+    if (event.data.size > 0) {
+        recordedChunks.push(event.data);
+    }
+};
+
+mediaRecorder.onstop = () => {
+    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+    recordedChunks = [];
+    const url = URL.createObjectURL(blob);
+    recordedVideo.src = url;
+
+    // Blobを保存
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'recorded_video.webm'; // WebM形式で保存
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 100);
+};
+
+mediaRecorder.start();
+
+// 録画停止
+stopButton.addEventListener('click', () => {
+    mediaRecorder.stop();
+});
+'''
+
 def make_js(canvas, asm, fps=0, onclick=None):
     js = DRAW_JS.replace('[[]]', json.dumps(asm))
     newid = f'"canvas{canvas.uuid0}"'
@@ -223,7 +331,6 @@ def make_js(canvas, asm, fps=0, onclick=None):
     if onclick is not None:
         js += CLICK_JS
     return f'<script>\n{js}\n</script>'
-
 
 def safe(f):
     def safe_fn(*args):

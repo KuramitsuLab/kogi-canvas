@@ -8,13 +8,12 @@ python3 setup.py sdist bdist_wheel
 twine upload --repository pypi dist/*
 '''
 
-
 def _requires_from_file(filename):
     return open(filename).read().splitlines()
 
 
 setup(name="kogi-canvas",
-      version="0.1.2",
+      version="0.1.3",
       license='Apache',
       author='Kimio Kuramitsu',
       description="Canvas from KOGI",
