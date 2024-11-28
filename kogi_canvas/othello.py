@@ -200,5 +200,3 @@ def play_othello(ai=None, board=None):
     draw_board(canvas, board)
 
     display(canvas)
-
-play_othello(PandaAI())
