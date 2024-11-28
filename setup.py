@@ -13,7 +13,7 @@ def _requires_from_file(filename):
 
 
 setup(name="kogi-canvas",
-      version="0.1.3",
+      version="0.1.4",
       license='Apache',
       author='Kimio Kuramitsu',
       description="Canvas from KOGI",
