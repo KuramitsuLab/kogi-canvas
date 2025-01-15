@@ -141,7 +141,18 @@ def draw_board_moves(canvas, moves):
         draw_board(canvas, board)
 
 def play_othello(ai=None, board=None):
-    if board is None:
+    if board == 8:
+        board = [
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,1,2,0,0,0],
+            [0,0,0,2,1,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+        ]
+    elif board is None or board==6:
         board = [
             [0,0,0,0,0,0],
             [0,0,0,0,0,0],
@@ -197,19 +208,31 @@ def play_othello(ai=None, board=None):
         draw_board_moves(canvas, moves)
 
 
-    canvas = Canvas(background='green', grid=width//6, width=width, height=width, onclick=redraw)
+    canvas = Canvas(background='green', grid=width//len(board), width=width, height=width, onclick=redraw)
     draw_board(canvas, board)
 
     display(canvas)
 
+play = play_othello
 
 def count_stone(board):
     black = sum(row.count(BLACK) for row in board)
     white = sum(row.count(WHITE) for row in board)
     return black, white
 
-def run_othello(blackai=None, whiteai=None, board=None):
-    if board is None:
+def run_othello(blackai=None, whiteai=None, board=None, width=300):
+    if board == 8:
+        board = [
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,1,2,0,0,0],
+            [0,0,0,2,1,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+        ]
+    elif board is None or board==6:
         board = [
             [0,0,0,0,0,0],
             [0,0,0,0,0,0],
@@ -218,29 +241,31 @@ def run_othello(blackai=None, whiteai=None, board=None):
             [0,0,0,0,0,0],
             [0,0,0,0,0,0],
         ]
+
     if blackai is None:
         blackai = PandaAI()
 
     if whiteai is None:
         whiteai = PandaAI()
         print(f'{whiteai.face()}が相手するよ！覚悟しな！')
-
+    print(f'先手 黒 {blackai.face()} 後手 白 {whiteai.face()}')
+    board = copy(board)
     black_time = 0
     white_time = 0
     moved = True
-    while moved and can_place(board, BLACK) and can_place(board, WHITE):
+    while moved or can_place(board, BLACK) or can_place(board, WHITE):
         moved = False
         if can_place(board, BLACK):
             start = time.time()
             x, y = blackai.place(copy(board), BLACK)
             black_time += time.time() - start
             if not can_place_x_y(board, BLACK, x, y):
-                print(f'{blackai.face()}は、置けないところに置こうとしました', (x, y))
+                print(f'黒 {blackai.face()}は、置けないところに置こうとしました', (x, y))
                 print('反則負けです')
                 return
             move_stone(board, BLACK, x, y)
             black, white = count_stone(board)
-            print(f'{blackai.face()}は{(x, y)}におきました。黒: {black}, 白: {white}')
+            print(f'黒 {blackai.face()}は{(x, y)}におきました。黒: {black}, 白: {white}')
             moved = True
         else:
             print(f'{blackai.face()}は、どこにも置けないのでスキップします')
@@ -250,25 +275,29 @@ def run_othello(blackai=None, whiteai=None, board=None):
             x, y = whiteai.place(copy(board), WHITE)
             white_time += time.time() - start
             if not can_place_x_y(board, WHITE, x, y):
-                print(f'{whiteai.face()}は、置けないところに置こうとしました', (x, y))
+                print(f'白 {whiteai.face()}は、置けないところに置こうとしました', (x, y))
                 print('反則負けです')
                 return
             move_stone(board, WHITE, x, y)
             black, white = count_stone(board)
-            print(f'{whiteai.face()}は{(x, y)}におきました。黒: {black}, 白: {white}')
+            print(f'白 {whiteai.face()}は{(x, y)}におきました。黒: {black}, 白: {white}')
             moved = True
         else:
             print(f'{whiteai.face()}は、どこにも置けないのでスキップします')
         
     black, white = count_stone(board)
-    print(f'最終結果: 黒: {black}, 白: {white}', end=' ')
+    print(f'最終結果: 黒 {blackai.face()}: {black}, 白 {whiteai.face()}: {white}', end=' ')
     if black > white:
-        print(f'黒{blackai.face()}の勝ち')
+        print(f'黒 {blackai.face()}の勝ち')
     elif black < white:
-        print(f'白{whiteai.face()}の勝ち')
+        print(f'白 {whiteai.face()}の勝ち')
     else:
         print('引き分け')
-    print(f'思考時間: 黒: {black_time:.5f}秒, 白: {white_time:.5f}秒')
+    
+    canvas = Canvas(background='green', grid=width//len(board), width=width, height=width)
+    draw_board(canvas, board)
+    display(canvas)
+    print(f'思考時間: 黒 {blackai.face()}: {black_time:.5f}秒, 白 {whiteai.face()}: {white_time:.5f}秒')
+    return black, white
 
-
-
+run = run_othello
